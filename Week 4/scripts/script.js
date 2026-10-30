@@ -25,7 +25,7 @@ var star = {
     color:"black",
     drawCircle:function(){
         ctx.beginPath()
-        ctx.style = this.color
+        ctx.fillStyle = this.color
         ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
         ctx.fill();
     },
@@ -40,6 +40,8 @@ stars[i] = createStar();
 stars[i].x = Math.random() * canvas.width;
 stars[i].y = Math.random() * canvas.height;
 stars[i].radius = Math.random() * 25;
+// stars[i].color = `rgb($(Math.random()*255), $(Math.random()*255), $(Math.random()*255),)`
+stars[i].color = `white`
 
 }
 
@@ -89,7 +91,7 @@ document.addEventListener("keyup", function(e){
     if(e.key == "w"){
         w = false;
     }
-});
+}); 
 
 
 ctx.fillStyle = boxColor;
@@ -103,9 +105,7 @@ function game(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     startPoint.x += moveDirection.x;
     startPoint.y += moveDirection.y;
-    ctx.fillStyle = boxColor;
-    ctx.fillRect(startPoint.x, startPoint.y, 25,25)
-    ctx.drawImage(shipSprite.image, shipSprite.x, shipSprite.y, 25,25)
+    
 
 
     if(a == true){
@@ -133,7 +133,7 @@ function game(){
     }
  
     if(startPoint.y > canvas.height - 25 || startPoint.y < 0){
-        //startPoint.y = -25;
+        //startPoint.y = -25; 
         moveDirection.y *= -1;
         boxColor = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
     }
@@ -142,7 +142,20 @@ function game(){
         moveDirection.x *= -1;
         boxColor = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
     }
-    for(var i = 0; i < stars.length; i++){
+   ctx.fillStyle="black"
+   ctx.fillRect(0,0,canvas.width,canvas.height);
+    
+   
+   for(var i = 0; i < stars.length; i++){
         stars[i].drawCircle();
+        stars[i].y++;
+        if(stars[i].y > canvas.height + stars[i].radius *2){
+            stars[i].x = Math.random() * canvas.width;
+            stars[i].y = -(Math.random() * canvas.height)
+        }
     }
+
+    ctx.fillStyle = boxColor;
+    ctx.fillRect(startPoint.x, startPoint.y, 25,25)
+    ctx.drawImage(shipSprite.image, shipSprite.x, shipSprite.y, 25,25)
 }
