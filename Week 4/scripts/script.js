@@ -40,6 +40,8 @@ var acceleration = 0.3;
 
 var score = 0;
 
+var objectsDestroyed = 0;
+
 for(var i = 0; i < starCount; i++){
 stars[i] = createStar();
 stars[i].x = Math.random() * canvas.width;
@@ -168,7 +170,7 @@ function game(){
         shipSprite.x = -25
        
     }
-    if(shipSprite.y > canvas.width){
+    if(shipSprite.y > canvas.height){
         shipSprite.y = -25
     }
  
@@ -249,21 +251,31 @@ function game(){
             bullet.y + bullet.height > startPoint.y;
         if(hitBox){
             //remove bullet
-            bullet.splice(i, 1)
+            bullets.splice(i,1);
             startPoint.x = 10000000000;
             moveDirection.x = 0;
             moveDirection.y = 0;
+            objectsDestroyed += 10;
             continue;
         }
 
         for(var j = 0; j < stars.length; j++){
             if(shipToStarCollision(bullet, stars[j])){
-                bullets.splice(i,1);
+                bullets.splice(i,1); 
                 stars[j].x = Math.random() * canvas.width;
                 stars[j].y = -(Math.random() * canvas.height);
+                objectsDestroyed += 1;
                 continue;
             }
         }
+        for(var l = 0; l < startPoint.length; l++){
+            if(shipToStarCollision(bullet, startPoint[l])){
+                bullets.splice(i,1);
+                objectsDestroyed += 10;
+                continue;
+            }
+        }
+        
 
         ctx.fillStyle = bullet.color;
         ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
@@ -271,12 +283,15 @@ function game(){
 
 
     ctx.fillStyle = boxColor;
-    ctx.fillRect(startPoint.x, startPoint.y, 25,25)
-    ctx.drawImage(shipSprite.image, shipSprite.x, shipSprite.y, 25,25)
+    ctx.fillRect(startPoint.x, startPoint.y, 25,25);
+    ctx.drawImage(shipSprite.image, shipSprite.x, shipSprite.y, 25,25);
 
     //draw hud element
     ctx.font = "30px Arial";
     ctx.fillText(`Score:${score}`,30,30);
+
+    ctx.font = "30px Arial";
+    ctx.fillText(`Objects Destroyed:${objectsDestroyed}`,30,60);
 
     
 }
